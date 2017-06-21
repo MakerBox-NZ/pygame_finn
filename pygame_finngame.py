@@ -61,19 +61,19 @@ while main == True:
                 sys.exit()
                 main = False
 
-                if event.key == pygame.K_LEFT
-                         print('left stop')
-                if event.key == pygame.K_RIGHT
-                        print('right stop')
-                if event.key == pygame.K_UP
-                           print('up stop')
-                if event.type == pyagme.KEYDOWN
-                    if event.key == pygame.K_LEFT
-                        print('left')
-                    if event.key == pygame.K_RIGHT
-                        print('right')
-                    if event.key == pygame.K_UP
-                        print('up')
+            if event.key == pygame.K_LEFT:
+                print('left stop')
+            if event.key == pygame.K_RIGHT:
+                print('right stop')
+            if event.key == pygame.K_UP:
+                print('up stop')
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                print('left')
+            if event.key == pygame.K_RIGHT:
+                print('right')
+            if event.key == pygame.K_UP:
+                print('up')
     '''Main loop'''
     screen.blit(backdrop, backdropRect)
     movingsprites.draw(screen)  #draw player
