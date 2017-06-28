@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         #update sprite position
         currentX = self.rect.x
-        nextX = currentX = self.momentumX
+        nextX = currentX + self.momentumX
         self.rect.x = nextX
 
         currentY = self.rect.y
