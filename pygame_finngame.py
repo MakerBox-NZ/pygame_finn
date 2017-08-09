@@ -15,7 +15,9 @@ class Player(pygame.sprite.Sprite):
         self.images.append(img)
 
         self.image = self.images[0]
-        self.rect = self.image.get_rect()   
+        self.rect = self.image.get_rect()
+        def gravity(self):
+            self.momentumY += 3.2 #how fast player falls 
 
 
         self.image.convert_alpha() #optimise for alpha
@@ -28,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 
     
 
-    def update(self, enemy_list):
+    def update(self, enemy_list, platform_list):
         #update sprite position
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -43,6 +45,30 @@ class Player(pygame.sprite.Sprite):
         for enemy in enemy_hit_list:
             self.score -= 1
             print(self.score)
+
+class Platform(pygame.sprite.Sprite):
+    #x (location, y location, img width, img height, img file)
+    def __init__(self,xloc,yloc,imgw, imgh, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([imgw, imgh])
+        self.image.convert_alpha()
+        self.image.set_colorkey(alpha)
+        self.blockpic = pygame.image.load(img).convert()
+        self.rect = self.image.get_rect()
+        self.rect.y = yloc
+        self.rect.x = xloc
+
+        #paint image into blocks
+        self.image.blit(self.blockpic, (0,0),(0,0,imgw,imgh))
+
+
+    def level1():
+        #create level 1
+        platform_list = pygame.sprite.Group()
+        block = Platform(o, 591, 763, 118,os.path.join('images','platform.png'))
+        platform_list.add(block) #after each block
+
+        return platform_list #at end of function level11
         
 
 class Enemy(pygame.sprite.Sprite):
@@ -104,7 +130,7 @@ enemy_list = pygame.sprite.Group() #create enemy group
 enemy_list.add(enemy) #add enemy to group
                 
 
-'''Main loop'''
+'''MAIN LOOP'''
 while main == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -138,7 +164,10 @@ while main == True:
               
    
     screen.blit(backdrop, backdropRect)
-    player.update(enemy_list) #update player posistion
+    platform_list.draw(screen)
+    player.gravity() #check gravity
+    
+    player.update(enemy_list, platform_list) #update player 
     movingsprites.draw(screen)  #draw player
     enemy.move() #move enemy sprite
 
