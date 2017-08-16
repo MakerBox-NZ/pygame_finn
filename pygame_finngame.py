@@ -16,8 +16,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.images[0]
         self.rect = self.image.get_rect()
-        def gravity(self):
-            self.momentumY += 3.2 #how fast player falls 
+       
 
 
         self.image.convert_alpha() #optimise for alpha
@@ -27,6 +26,9 @@ class Player(pygame.sprite.Sprite):
         #control player movement
         self.momentumX += x
         self.momentumY += y
+
+    def gravity(self):
+        self.momentumY += 3.2 #how fast player falls 
 
     
 
@@ -65,7 +67,7 @@ class Platform(pygame.sprite.Sprite):
     def level1():
         #create level 1
         platform_list = pygame.sprite.Group()
-        block = Platform(o, 591, 763, 118,os.path.join('images','platform.png'))
+        block = Platform(0, 591, 763, 118,os.path.join('images','platform.png'))
         platform_list.add(block) #after each block
 
         return platform_list #at end of function level11
@@ -99,8 +101,8 @@ class Enemy(pygame.sprite.Sprite):
 '''SETUP'''
 #CODE RUNS ONCE
 
-screenX = 480 #width
-screenY = 360 #height
+screenX = 960 #width
+screenY = 720 #height
 alpha = (0, 0, 0)
 black = (1, 1, 1)
 white = (255, 255, 255)
@@ -113,9 +115,9 @@ main = True
 
 
 screen = pygame.display.set_mode([screenX, screenY])
-backdrop = pygame.image.load(os.path.join('images','stage.png')).convert()
+backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
 backdropRect = screen.get_rect()
-
+platform_list = Platform.level1()
 
 player = Player() #Spawn
 player.rect.x = 0
