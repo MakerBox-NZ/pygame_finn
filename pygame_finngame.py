@@ -28,7 +28,11 @@ class Player(pygame.sprite.Sprite):
         self.momentumY += y
 
     def gravity(self):
-        self.momentumY += 3.2 #how fast player falls 
+        self.momentumY += 3.2 #how fast player falls
+
+        if self.rect.y > 960 and self.momentumY >= 0:
+            self.momentumY = 0
+            self.rect.y = screenY-20
 
     
 
@@ -43,6 +47,16 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = nextY
 
         #collisions
+        block_hit_list = pygame.sprite.spritecollide(self, platform_list, False)
+         if self.momentumX > 0:
+             for block in block_hit_list:
+                 self.rect.y = currentY
+                 self.rect.x = currentX+9
+                 self.momentumY = 0
+         if self.momentumY > 0:
+             for block in block_hit_list:
+                 self.rect.y = currentY
+
         enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
         for enemy in enemy_hit_list:
             self.score -= 1
@@ -67,7 +81,7 @@ class Platform(pygame.sprite.Sprite):
     def level1():
         #create level 1
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 591, 763, 118,os.path.join('images','platform.png'))
+        block = Platform(0, 670, 763, 118,os.path.join('images','platform.png'))
         platform_list.add(block) #after each block
 
         return platform_list #at end of function level11
@@ -115,7 +129,7 @@ main = True
 
 
 screen = pygame.display.set_mode([screenX, screenY])
-backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
+backdrop = pygame.image.load(os.path.join('images','backround.png')).convert()
 backdropRect = screen.get_rect()
 platform_list = Platform.level1()
 
@@ -127,7 +141,7 @@ movingsprites.add(player)
 movesteps = 10 #how fast move
 
 #enemy code
-enemy = Enemy(0,0,'Finn_enemy.png') #spawn enemy
+enemy = Enemy(0,660,'Finn_enemy.png') #spawn enemy
 enemy_list = pygame.sprite.Group() #create enemy group
 enemy_list.add(enemy) #add enemy to group
                 
