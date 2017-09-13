@@ -10,6 +10,9 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.momentumX = 0 #move along X
         self.momentumY = 0 #move along Y
+        
+        self.collide_delta = 0
+        self.jump_delta = 6
         self.images = [ ]
         img = pygame.image.load(os.path.join('images', 'hero.png')).convert()
         self.images.append(img)
@@ -35,7 +38,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = screenY-20
 
     
-
+    def jump (self, platform_list):
+        self.jump_delta = 0
     def update(self, enemy_list, platform_list):
         #update sprite position
         currentX = self.rect.x
@@ -46,21 +50,35 @@ class Player(pygame.sprite.Sprite):
         nextY = currentY + self.momentumY
         self.rect.y = nextY
 
+        #gravity
+          
+
         #collisions
         block_hit_list = pygame.sprite.spritecollide(self, platform_list, False)
-         if self.momentumX > 0:
+        if self.momentumX > 0:
              for block in block_hit_list:
                  self.rect.y = currentY
                  self.rect.x = currentX+9
                  self.momentumY = 0
-         if self.momentumY > 0:
+                 self.collide_delta = 0 #stop jumping
+                 
+        if self.momentumY > 0:
              for block in block_hit_list:
                  self.rect.y = currentY
+                 self.momentumY = 0
+                 self.collide_delta = 0 #stop jumping
 
         enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
         for enemy in enemy_hit_list:
             self.score -= 1
             print(self.score)
+
+        if self.collide_delta < 6 and self.jump_delta < 6:
+            self.jump_delta = 6*2
+            self.momentumY -=33 #how high jump
+
+            self.collide_delta +=6
+            self.jump_delta += 6
 
 class Platform(pygame.sprite.Sprite):
     #x (location, y location, img width, img height, img file)
@@ -81,7 +99,19 @@ class Platform(pygame.sprite.Sprite):
     def level1():
         #create level 1
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 670, 763, 118,os.path.join('images','platform.png'))
+        block = Platform(0, 670,180, 31,os.path.join('images','platform.png'))
+        platform_list.add(block) #after each block
+
+        block = Platform(180, 670,180, 31,os.path.join('images','platform.png'))
+        platform_list.add(block) #after each block
+
+        block = Platform(360, 670,180, 31,os.path.join('images','platform.png'))
+        platform_list.add(block) #after each block
+
+        block = Platform(540, 670,180, 31,os.path.join('images','platform.png'))
+        platform_list.add(block) #after each block
+
+        block = Platform(720, 670,180, 31,os.path.join('images','platform.png'))
         platform_list.add(block) #after each block
 
         return platform_list #at end of function level11
@@ -177,6 +207,7 @@ while main == True:
                 player.control(movesteps, 0)
             if event.key == pygame.K_UP:
                 print('up')
+                player.jump(platform_list)
               
    
     screen.blit(backdrop, backdropRect)
