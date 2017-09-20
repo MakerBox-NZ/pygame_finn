@@ -170,6 +170,9 @@ movingsprites = pygame.sprite.Group()
 movingsprites.add(player)
 movesteps = 10 #how fast move
 
+forwardX = 600 #when to scroll
+backwardX = 150 #when to scroll
+
 #enemy code
 enemy = Enemy(0,660,'Finn_enemy.png') #spawn enemy
 enemy_list = pygame.sprite.Group() #create enemy group
@@ -208,6 +211,28 @@ while main == True:
             if event.key == pygame.K_UP:
                 print('up')
                 player.jump(platform_list)
+
+    #scroll world forward
+    if player.rect.x >= forwardX:
+         scroll = player.rect.x - forwardX
+         player.rect.x = forwardX
+         for platform in platform_list:
+             platform.rect.x -= scroll
+
+         for enemy in enemy_list:
+              enemy.rect.x -= scroll
+
+
+
+    #scroll world backward
+    if player.rect.x <= backwardX:
+         scroll = min(1, (backwardX - player.rect.x))
+         player.rect.x = backwardX
+         for platform in platform_list:
+             platform.rect.x += scroll
+
+         for enemy in enemy_list:
+              enemy.rect.x += scroll
               
    
     screen.blit(backdrop, backdropRect)
